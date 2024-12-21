@@ -16,4 +16,13 @@ describe('Signup Controller', () => {
 		})
 		expect(result).toEqual(badRequest(new MissingParamError('email')))
 	})
+
+	test('Should return 400 if no password is provided', async () => {
+		const sut = new SignupController()
+		const result = await sut.handle({
+			name: 'any_name',
+			email: 'any_email@mail.com'
+		})
+		expect(result).toEqual(badRequest(new MissingParamError('password')))
+	})
 })
