@@ -4,14 +4,11 @@ import type { Controller, HttpResponse } from './protocols'
 
 export class SignupController implements Controller {
 	async handle(request: any): Promise<HttpResponse> {
-		if (!request.name) {
-			return badRequest(new MissingParamError('name'))
-		}
-		if (!request.email) {
-			return badRequest(new MissingParamError('email'))
-		}
-		if (!request.password) {
-			return badRequest(new MissingParamError('password'))
+		const requiredFields = ['name', 'email', 'password']
+		for (const field of requiredFields) {
+			if (!request[field]) {
+				return badRequest(new MissingParamError(field))
+			}
 		}
 		return {
 			statusCode: 404,
