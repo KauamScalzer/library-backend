@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/KauamScalzer/library-backend/issues"
   },
-  "homepage": "https://github.com/KauamScalzer/library-backend#readme"
+  "homepage": "https://github.com/KauamScalzer/library-backend#readme",
+  "devDependencies": {
+    "git-commit-msg-linter": "^5.0.8"
+  }
 }
