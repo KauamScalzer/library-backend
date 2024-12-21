@@ -3,7 +3,7 @@
 > ## Success cases
 
 1. ❌ Recieve a **POST** request on **/api/user/signup**
-2. ❌ Validate the **required fields** `name`, `email`, and `password`
+2. ✅ Validate the **required fields** `name`, `email`, and `password`
 3. ❌ Validate that recieved `email` is a **valid email**
 4. ❌ Validate that recieved `email` is **not in use**
 5. ❌ **Encrypt** the `password`
@@ -15,7 +15,7 @@
 > ## Error cases
 
 1. ❌ Return error **404** if the API does not exist
-2. ❌ Return error **400** if `name`, `email`, or `password` are not provided by the client
+2. ✅ Return error **400** if `name`, `email`, or `password` are not provided by the client
 3. ❌ Return error **400** if the `email` field is an invalid email
 4. ❌ Return error **403** if the provided `email` is already in use
 5. ❌ Return error **500** if there is an issue generating the encrypted password
