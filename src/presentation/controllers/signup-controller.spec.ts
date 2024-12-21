@@ -2,6 +2,7 @@ import { InvalidParamError, MissingParamError } from '../errors'
 import { badRequest } from '../helpers'
 import { SignupController } from './signup-controller'
 import type { IEmailValidator } from '../protocols'
+import type { IAddUser } from '../../domain/usecases'
 
 class EmailValidatorSpy implements IEmailValidator {
 	email: string
@@ -12,17 +13,29 @@ class EmailValidatorSpy implements IEmailValidator {
 	}
 }
 
+class AddUserSpy implements IAddUser {
+	params: IAddUser.Params
+	result: IAddUser.Result = false
+	async add(params: IAddUser.Params): Promise<IAddUser.Result> {
+		this.params = params
+		return this.result
+	}
+}
+
 type SutTypes = {
 	sut: SignupController
 	emailValidatorSpy: EmailValidatorSpy
+	addUserSpy: AddUserSpy
 }
 
 const makeSut = (): SutTypes => {
 	const emailValidatorSpy = new EmailValidatorSpy()
-	const sut = new SignupController(emailValidatorSpy)
+	const addUserSpy = new AddUserSpy()
+	const sut = new SignupController(emailValidatorSpy, addUserSpy)
 	return {
 		sut,
-		emailValidatorSpy
+		emailValidatorSpy,
+		addUserSpy
 	}
 }
 
@@ -70,5 +83,19 @@ describe('Signup Controller', () => {
 			password: 'any_password'
 		})
 		expect(emailValidatorSpy.email).toEqual('any_email@mail.com')
+	})
+
+	test('Should call AddUser with correct values', async () => {
+		const { sut, addUserSpy } = makeSut()
+		await sut.handle({
+			name: 'any_name',
+			email: 'any_email@mail.com',
+			password: 'any_password'
+		})
+		expect(addUserSpy.params).toEqual({
+			name: 'any_name',
+			email: 'any_email@mail.com',
+			password: 'any_password'
+		})
 	})
 })
