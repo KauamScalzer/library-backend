@@ -8,4 +8,12 @@ describe('Signup Controller', () => {
 		const result = await sut.handle({})
 		expect(result).toEqual(badRequest(new MissingParamError('name')))
 	})
+
+	test('Should return 400 if no email is provided', async () => {
+		const sut = new SignupController()
+		const result = await sut.handle({
+			name: 'any_name'
+		})
+		expect(result).toEqual(badRequest(new MissingParamError('email')))
+	})
 })
