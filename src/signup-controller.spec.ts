@@ -60,4 +60,15 @@ describe('Signup Controller', () => {
 		})
 		expect(result).toEqual(badRequest(new InvalidParamError('email')))
 	})
+
+	test('Should call EmailValidator with correct email', async () => {
+		const { sut, emailValidatorSpy } = makeSut()
+		emailValidatorSpy.result = true
+		await sut.handle({
+			name: 'any_name',
+			email: 'any_email@mail.com',
+			password: 'any_password'
+		})
+		expect(emailValidatorSpy.email).toEqual('any_email@mail.com')
+	})
 })
