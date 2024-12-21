@@ -1,0 +1,6 @@
+{
+  "*.ts": [
+    "biome format --write",
+    "npm run test:staged"
+  ]
+}
