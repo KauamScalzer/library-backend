@@ -1,0 +1,22 @@
+{
+  "name": "library-backend",
+  "version": "1.0.0",
+  "description": "This project consists of creating an API for managing a library. Developed with Node.js, the goal is to study and apply interesting backend development concepts, such as user authentication, book CRUD operations, and loan management. The project idea was generated with the help of ChatGPT.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KauamScalzer/library-backend.git"
+  },
+  "author": "Kauam Scalzer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KauamScalzer/library-backend/issues"
+  },
+  "homepage": "https://github.com/KauamScalzer/library-backend#readme"
+}
