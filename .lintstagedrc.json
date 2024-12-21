@@ -1,6 +1,6 @@
 {
   "*.ts": [
-    "biome format --write",
-    "npm run test:staged"
+    "npx biome format",
+    "npx biome lint --fix"
   ]
 }
