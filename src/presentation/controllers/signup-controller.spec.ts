@@ -1,7 +1,7 @@
-import { InvalidParamError, MissingParamError } from './errors'
-import { badRequest } from './helpers'
+import { InvalidParamError, MissingParamError } from '../errors'
+import { badRequest } from '../helpers'
 import { SignupController } from './signup-controller'
-import type { IEmailValidator } from './protocols'
+import type { IEmailValidator } from '../protocols'
 
 class EmailValidatorSpy implements IEmailValidator {
 	email: string
