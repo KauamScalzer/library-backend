@@ -1,15 +1,28 @@
-import { MissingParamError } from './errors'
+import { InvalidParamError, MissingParamError } from './errors'
 import { badRequest } from './helpers'
 import { SignupController } from './signup-controller'
+import type { IEmailValidator } from './protocols'
+
+class EmailValidatorSpy implements IEmailValidator {
+	email: string
+	result = false
+	validate(email: string): boolean {
+		this.email = email
+		return this.result
+	}
+}
 
 type SutTypes = {
 	sut: SignupController
+	emailValidatorSpy: EmailValidatorSpy
 }
 
 const makeSut = (): SutTypes => {
-	const sut = new SignupController()
+	const emailValidatorSpy = new EmailValidatorSpy()
+	const sut = new SignupController(emailValidatorSpy)
 	return {
-		sut
+		sut,
+		emailValidatorSpy
 	}
 }
 
@@ -35,5 +48,16 @@ describe('Signup Controller', () => {
 			email: 'any_email@mail.com'
 		})
 		expect(result).toEqual(badRequest(new MissingParamError('password')))
+	})
+
+	test('Should return 400 if a invalid email is provided', async () => {
+		const { sut, emailValidatorSpy } = makeSut()
+		emailValidatorSpy.result = true
+		const result = await sut.handle({
+			name: 'any_name',
+			email: 'invalid_email',
+			password: 'any_password'
+		})
+		expect(result).toEqual(badRequest(new InvalidParamError('email')))
 	})
 })
