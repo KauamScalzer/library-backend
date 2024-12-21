@@ -7,6 +7,9 @@ export class SignupController implements Controller {
 		if (!request.name) {
 			return badRequest(new MissingParamError('name'))
 		}
+		if (!request.email) {
+			return badRequest(new MissingParamError('email'))
+		}
 		return {
 			statusCode: 404,
 			body: 'not_implemented'
