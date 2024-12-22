@@ -1,4 +1,4 @@
-import type { IAddUser } from '../../domain/usecases'
+import type { IAddUser, IAuthenticate } from '../../domain/usecases'
 import {
 	EmailInUseError,
 	InvalidParamError,
@@ -10,7 +10,8 @@ import type { Controller, HttpResponse, IEmailValidator } from '../protocols'
 export class SignupController implements Controller {
 	constructor(
 		private readonly emailValidator: IEmailValidator,
-		private readonly addUser: IAddUser
+		private readonly addUser: IAddUser,
+		private readonly authenticate: IAuthenticate
 	) {}
 	async handle(request: any): Promise<HttpResponse> {
 		const requiredFields = ['name', 'email', 'password']
@@ -28,6 +29,7 @@ export class SignupController implements Controller {
 		if (user) {
 			return forbidden(new EmailInUseError())
 		}
+		await this.authenticate.auth({ email, password })
 		return {
 			statusCode: 404,
 			body: 'not_implemented'
