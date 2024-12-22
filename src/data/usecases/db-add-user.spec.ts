@@ -1,4 +1,4 @@
-import { DbAddUser } from './DbAddUser'
+import { DbAddUser } from './db-add-user'
 import type { ICheckUserByEmailRepository, IEncrypter, IInsertUserRepository } from '../protocols'
 import type { IAddUser } from '../../domain/usecases'
 
