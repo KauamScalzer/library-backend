@@ -6,7 +6,18 @@ import {
 import { badRequest, forbidden } from '../helpers'
 import { SignupController } from './signup-controller'
 import type { IEmailValidator } from '../protocols'
-import type { IAddUser } from '../../domain/usecases'
+import type { IAddUser, IAuthenticate } from '../../domain/usecases'
+
+class AuthenticateSpy implements IAuthenticate {
+	params: IAuthenticate.Params
+	result: IAuthenticate.Result = {
+		token: 'any_token'
+	}
+	async auth(params: IAuthenticate.Params): Promise<IAuthenticate.Result> {
+		this.params = params
+		return this.result
+	}
+}
 
 class EmailValidatorSpy implements IEmailValidator {
 	email: string
@@ -30,16 +41,23 @@ type SutTypes = {
 	sut: SignupController
 	emailValidatorSpy: EmailValidatorSpy
 	addUserSpy: AddUserSpy
+	authenticateSpy: AuthenticateSpy
 }
 
 const makeSut = (): SutTypes => {
+	const authenticateSpy = new AuthenticateSpy()
 	const emailValidatorSpy = new EmailValidatorSpy()
 	const addUserSpy = new AddUserSpy()
-	const sut = new SignupController(emailValidatorSpy, addUserSpy)
+	const sut = new SignupController(
+		emailValidatorSpy,
+		addUserSpy,
+		authenticateSpy
+	)
 	return {
 		sut,
 		emailValidatorSpy,
-		addUserSpy
+		addUserSpy,
+		authenticateSpy
 	}
 }
 
@@ -112,5 +130,18 @@ describe('Signup Controller', () => {
 			password: 'any_password'
 		})
 		expect(result).toEqual(forbidden(new EmailInUseError()))
+	})
+
+	test('Should call Authenticate with correct values', async () => {
+		const { sut, authenticateSpy } = makeSut()
+		await sut.handle({
+			name: 'any_name',
+			email: 'any_email@mail.com',
+			password: 'any_password'
+		})
+		expect(authenticateSpy.params).toEqual({
+			email: 'any_email@mail.com',
+			password: 'any_password'
+		})
 	})
 })
