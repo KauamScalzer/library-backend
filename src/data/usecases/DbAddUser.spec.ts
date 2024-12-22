@@ -31,11 +31,25 @@ const mockParams = (): IAddUser.Params => ({
 	password: 'any_password'
 })
 
+const throwError = (): never => {
+	throw new Error()
+}
+
 describe('DbAddUser Usecase', () => {
 	test('Should call CheckUserByEmailRepository with correct email', async () => {
 		const { sut, checkUserByEmailRepositorySpy } = makeSut()
 		const params = mockParams()
 		await sut.add(params)
 		expect(checkUserByEmailRepositorySpy.email).toEqual(params.email)
+	})
+
+	test('Should throw if CheckUserByEmailRepository throws', async () => {
+		const { sut, checkUserByEmailRepositorySpy } = makeSut()
+		jest
+			.spyOn(checkUserByEmailRepositorySpy, 'check')
+			.mockImplementationOnce(throwError)
+		const params = mockParams()
+		const promise = sut.add(params)
+		await expect(promise).rejects.toThrow()
 	})
 })
