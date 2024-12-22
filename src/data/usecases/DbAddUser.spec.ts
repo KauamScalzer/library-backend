@@ -106,4 +106,12 @@ describe('DbAddUser Usecase', () => {
 			password: encrypterSpy.result
 		})
 	})
+
+	test('Should throw if InsertUserRepository throws', async () => {
+		const { sut, insertUserRepositorySpy } = makeSut()
+		jest.spyOn(insertUserRepositorySpy, 'insert').mockImplementationOnce(throwError)
+		const params = mockParams()
+		const promise = sut.add(params)
+		await expect(promise).rejects.toThrow()
+	})
 })
