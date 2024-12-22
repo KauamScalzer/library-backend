@@ -11,6 +11,6 @@ export const forbidden = (error: Error): HttpResponse => ({
 })
 
 export const ok = (body: any): HttpResponse => ({
-	statusCode: 403,
+	statusCode: 200,
 	body
 })
