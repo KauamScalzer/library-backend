@@ -13,7 +13,7 @@ export class SignupController implements Controller {
 		private readonly addUser: IAddUser,
 		private readonly authenticate: IAuthenticate
 	) {}
-	async handle(request: any): Promise<HttpResponse> {
+	async handle(request: SignupController.Params): Promise<HttpResponse> {
 		try {
 			const requiredFields = ['name', 'email', 'password']
 			for (const field of requiredFields) {
@@ -35,5 +35,13 @@ export class SignupController implements Controller {
 		} catch (_error: any) {
 			return serverError()
 		}
+	}
+}
+
+export namespace SignupController {
+	export type Params = {
+		name: string
+		email: string
+		password: string
 	}
 }
