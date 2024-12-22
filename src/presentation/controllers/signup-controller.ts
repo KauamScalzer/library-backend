@@ -1,6 +1,10 @@
 import type { IAddUser } from '../../domain/usecases'
-import { InvalidParamError, MissingParamError } from '../errors'
-import { badRequest } from '../helpers'
+import {
+	EmailInUseError,
+	InvalidParamError,
+	MissingParamError
+} from '../errors'
+import { badRequest, forbidden } from '../helpers'
 import type { Controller, HttpResponse, IEmailValidator } from '../protocols'
 
 export class SignupController implements Controller {
@@ -20,7 +24,10 @@ export class SignupController implements Controller {
 		if (isEmailInvalid) {
 			return badRequest(new InvalidParamError('email'))
 		}
-		await this.addUser.add({ name, email, password })
+		const user = await this.addUser.add({ name, email, password })
+		if (user) {
+			return forbidden(new EmailInUseError())
+		}
 		return {
 			statusCode: 404,
 			body: 'not_implemented'
