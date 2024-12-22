@@ -3,7 +3,7 @@ import {
 	InvalidParamError,
 	MissingParamError
 } from '../errors'
-import { badRequest, forbidden, ok } from '../helpers'
+import { badRequest, forbidden, ok, serverError } from '../helpers'
 import { SignupController } from './signup-controller'
 import type { IEmailValidator } from '../protocols'
 import type { IAddUser, IAuthenticate } from '../../domain/usecases'
@@ -61,6 +61,10 @@ const makeSut = (): SutTypes => {
 	}
 }
 
+const throwError = (): never => {
+	throw new Error()
+}
+
 describe('Signup Controller', () => {
 	test('Should return 400 if no name is provided', async () => {
 		const { sut } = makeSut()
@@ -107,6 +111,17 @@ describe('Signup Controller', () => {
 		expect(emailValidatorSpy.email).toEqual('any_email@mail.com')
 	})
 
+	test('Should return 500 if EmailValidator throws', async () => {
+		const { sut, emailValidatorSpy } = makeSut()
+		jest.spyOn(emailValidatorSpy, 'validate').mockImplementationOnce(throwError)
+		const result = await sut.handle({
+			name: 'any_name',
+			email: 'any_email@mail.com',
+			password: 'any_password'
+		})
+		expect(result).toEqual(serverError())
+	})
+
 	test('Should call AddUser with correct values', async () => {
 		const { sut, addUserSpy } = makeSut()
 		await sut.handle({
@@ -119,6 +134,17 @@ describe('Signup Controller', () => {
 			email: 'any_email@mail.com',
 			password: 'any_password'
 		})
+	})
+
+	test('Should return 500 if AddUser throws', async () => {
+		const { sut, addUserSpy } = makeSut()
+		jest.spyOn(addUserSpy, 'add').mockImplementationOnce(throwError)
+		const result = await sut.handle({
+			name: 'any_name',
+			email: 'any_email@mail.com',
+			password: 'any_password'
+		})
+		expect(result).toEqual(serverError())
 	})
 
 	test('Should return 403 if AddUser returns true', async () => {
