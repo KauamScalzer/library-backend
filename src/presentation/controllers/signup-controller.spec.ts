@@ -1,5 +1,9 @@
-import { InvalidParamError, MissingParamError } from '../errors'
-import { badRequest } from '../helpers'
+import {
+	EmailInUseError,
+	InvalidParamError,
+	MissingParamError
+} from '../errors'
+import { badRequest, forbidden } from '../helpers'
 import { SignupController } from './signup-controller'
 import type { IEmailValidator } from '../protocols'
 import type { IAddUser } from '../../domain/usecases'
@@ -97,5 +101,16 @@ describe('Signup Controller', () => {
 			email: 'any_email@mail.com',
 			password: 'any_password'
 		})
+	})
+
+	test('Should return 403 if AddUser returns true', async () => {
+		const { sut, addUserSpy } = makeSut()
+		addUserSpy.result = true
+		const result = await sut.handle({
+			name: 'any_name',
+			email: 'any_email@mail.com',
+			password: 'any_password'
+		})
+		expect(result).toEqual(forbidden(new EmailInUseError()))
 	})
 })
