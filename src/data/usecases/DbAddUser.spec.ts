@@ -1,5 +1,6 @@
 import { DbAddUser } from './DbAddUser'
 import type { ICheckUserByEmailRepository } from '../protocols'
+import type { IAddUser } from '../../domain/usecases'
 
 class CheckUserByEmailRepositorySpy implements ICheckUserByEmailRepository {
 	email: string
@@ -24,14 +25,17 @@ const makeSut = (): SutTypes => {
 	}
 }
 
+const mockParams = (): IAddUser.Params => ({
+	email: 'any_email',
+	name: 'any_name',
+	password: 'any_password'
+})
+
 describe('DbAddUser Usecase', () => {
 	test('Should call CheckUserByEmailRepository with correct email', async () => {
 		const { sut, checkUserByEmailRepositorySpy } = makeSut()
-		await sut.add({
-			email: 'any_email',
-			name: 'any_name',
-			password: 'any_password'
-		})
-		expect(checkUserByEmailRepositorySpy.email).toEqual('any_email')
+		const params = mockParams()
+		await sut.add(params)
+		expect(checkUserByEmailRepositorySpy.email).toEqual(params.email)
 	})
 })
