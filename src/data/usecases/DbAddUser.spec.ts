@@ -10,10 +10,23 @@ class CheckUserByEmailRepositorySpy implements ICheckUserByEmailRepository {
 	}
 }
 
+type SutTypes = {
+	checkUserByEmailRepositorySpy: CheckUserByEmailRepositorySpy
+	sut: DbAddUser
+}
+
+const makeSut = (): SutTypes => {
+	const checkUserByEmailRepositorySpy = new CheckUserByEmailRepositorySpy()
+	const sut = new DbAddUser(checkUserByEmailRepositorySpy)
+	return {
+		sut,
+		checkUserByEmailRepositorySpy
+	}
+}
+
 describe('DbAddUser Usecase', () => {
 	test('Should call CheckUserByEmailRepository with correct email', async () => {
-		const checkUserByEmailRepositorySpy = new CheckUserByEmailRepositorySpy()
-		const sut = new DbAddUser(checkUserByEmailRepositorySpy)
+		const { sut, checkUserByEmailRepositorySpy } = makeSut()
 		await sut.add({
 			email: 'any_email',
 			name: 'any_name',
