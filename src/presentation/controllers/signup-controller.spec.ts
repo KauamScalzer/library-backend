@@ -3,7 +3,7 @@ import {
 	InvalidParamError,
 	MissingParamError
 } from '../errors'
-import { badRequest, forbidden } from '../helpers'
+import { badRequest, forbidden, ok } from '../helpers'
 import { SignupController } from './signup-controller'
 import type { IEmailValidator } from '../protocols'
 import type { IAddUser, IAuthenticate } from '../../domain/usecases'
@@ -143,5 +143,15 @@ describe('Signup Controller', () => {
 			email: 'any_email@mail.com',
 			password: 'any_password'
 		})
+	})
+
+	test('Should return 200 on success', async () => {
+		const { sut, authenticateSpy } = makeSut()
+		const result = await sut.handle({
+			name: 'any_name',
+			email: 'any_email@mail.com',
+			password: 'any_password'
+		})
+		expect(result).toEqual(ok(authenticateSpy.result))
 	})
 })

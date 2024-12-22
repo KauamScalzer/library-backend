@@ -4,7 +4,7 @@ import {
 	InvalidParamError,
 	MissingParamError
 } from '../errors'
-import { badRequest, forbidden } from '../helpers'
+import { badRequest, forbidden, ok } from '../helpers'
 import type { Controller, HttpResponse, IEmailValidator } from '../protocols'
 
 export class SignupController implements Controller {
@@ -29,10 +29,7 @@ export class SignupController implements Controller {
 		if (user) {
 			return forbidden(new EmailInUseError())
 		}
-		await this.authenticate.auth({ email, password })
-		return {
-			statusCode: 404,
-			body: 'not_implemented'
-		}
+		const result = await this.authenticate.auth({ email, password })
+		return ok(result)
 	}
 }
