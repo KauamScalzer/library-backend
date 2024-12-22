@@ -50,4 +50,12 @@ describe('DbAddUser Usecase', () => {
 		const promise = sut.add(params)
 		await expect(promise).rejects.toThrow()
 	})
+
+	test('Should return true if CheckUserByEmailRepository returns true', async () => {
+		const { sut, checkUserByEmailRepositorySpy } = makeSut()
+		checkUserByEmailRepositorySpy.result = true
+		const params = mockParams()
+		const result = await sut.add(params)
+		expect(result).toBeTruthy()
+	})
 })
