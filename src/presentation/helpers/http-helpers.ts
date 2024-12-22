@@ -1,3 +1,4 @@
+import { InternalServerError } from '../errors'
 import type { HttpResponse } from '../protocols'
 
 export const badRequest = (error: Error): HttpResponse => ({
@@ -13,4 +14,9 @@ export const forbidden = (error: Error): HttpResponse => ({
 export const ok = (body: any): HttpResponse => ({
 	statusCode: 200,
 	body
+})
+
+export const serverError = (): HttpResponse => ({
+	statusCode: 500,
+	body: new InternalServerError()
 })
