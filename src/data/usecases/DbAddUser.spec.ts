@@ -1,6 +1,13 @@
 import { DbAddUser } from './DbAddUser'
-import type { ICheckUserByEmailRepository, IEncrypter } from '../protocols'
+import type { ICheckUserByEmailRepository, IEncrypter, IInsertUserRepository } from '../protocols'
 import type { IAddUser } from '../../domain/usecases'
+
+class InsertUserRepositorySpy implements IInsertUserRepository {
+	params: IInsertUserRepository.Params
+	async insert(params: IInsertUserRepository.Params): Promise<void> {
+		this.params = params
+	}
+}
 
 class EncrypterSpy implements IEncrypter {
 	value: string
@@ -23,17 +30,20 @@ class CheckUserByEmailRepositorySpy implements ICheckUserByEmailRepository {
 type SutTypes = {
 	checkUserByEmailRepositorySpy: CheckUserByEmailRepositorySpy
 	encrypterSpy: EncrypterSpy
+	insertUserRepositorySpy: InsertUserRepositorySpy
 	sut: DbAddUser
 }
 
 const makeSut = (): SutTypes => {
+	const insertUserRepositorySpy = new InsertUserRepositorySpy()
 	const encrypterSpy = new EncrypterSpy()
 	const checkUserByEmailRepositorySpy = new CheckUserByEmailRepositorySpy()
-	const sut = new DbAddUser(checkUserByEmailRepositorySpy, encrypterSpy)
+	const sut = new DbAddUser(checkUserByEmailRepositorySpy, encrypterSpy, insertUserRepositorySpy)
 	return {
 		sut,
 		checkUserByEmailRepositorySpy,
-		encrypterSpy
+		encrypterSpy,
+		insertUserRepositorySpy
 	}
 }
 
@@ -84,5 +94,16 @@ describe('DbAddUser Usecase', () => {
 		const params = mockParams()
 		const promise = sut.add(params)
 		await expect(promise).rejects.toThrow()
+	})
+
+	test('Should call InsertUserRepository with correct values', async () => {
+		const { sut, encrypterSpy, insertUserRepositorySpy } = makeSut()
+		const params = mockParams()
+		await sut.add(params)
+		expect(insertUserRepositorySpy.params).toEqual({
+			name: params.name,
+			email: params.email,
+			password: encrypterSpy.result
+		})
 	})
 })
