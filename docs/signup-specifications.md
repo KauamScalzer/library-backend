@@ -10,15 +10,15 @@
 6. ❌ **Create** a user account with the provided data, **replacing** the `password` with the encrypted version
 7. ❌ **Generate** an **access token** based on the user `ID`
 8. ❌ **Update** the user's data with the generated `access token`
-9. ❌ Return a **200** status code with the generated `access token` and the `user's name`
+9. ❌ Return a **200** status code with the generated `access token`
 
 > ## Error cases
 
 1. ❌ Return error **404** if the API does not exist
 2. ✅ Return error **400** if `name`, `email`, or `password` are not provided by the client
 3. ✅ Return error **400** if the `email` field is an invalid email
-4. ❌ Return error **403** if the provided `email` is already in use
-5. ❌ Return error **500** if there is an issue generating the encrypted password
-6. ❌ Return error **500** if there is an issue creating the user account
-7. ❌ Return error **500** if there is an issue generating the access token
-8. ❌ Return error **500** if there is an issue updating the user with the generated access token
+4. ✅ Return error **403** if the provided `email` is already in use
+5. ✅ Return error **500** if there is an issue generating the encrypted password
+6. ✅ Return error **500** if there is an issue creating the user account
+7. ✅ Return error **500** if there is an issue generating the access token
+8. ✅ Return error **500** if there is an issue updating the user with the generated access token
