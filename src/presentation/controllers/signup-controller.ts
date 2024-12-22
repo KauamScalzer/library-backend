@@ -1,9 +1,5 @@
 import type { IAddUser, IAuthenticate } from '../../domain/usecases'
-import {
-	EmailInUseError,
-	InvalidParamError,
-	MissingParamError
-} from '../errors'
+import { EmailInUseError, InvalidParamError, MissingParamError } from '../errors'
 import { badRequest, forbidden, ok, serverError } from '../helpers'
 import type { Controller, HttpResponse, IEmailValidator } from '../protocols'
 

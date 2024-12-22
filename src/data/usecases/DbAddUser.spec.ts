@@ -45,9 +45,7 @@ describe('DbAddUser Usecase', () => {
 
 	test('Should throw if CheckUserByEmailRepository throws', async () => {
 		const { sut, checkUserByEmailRepositorySpy } = makeSut()
-		jest
-			.spyOn(checkUserByEmailRepositorySpy, 'check')
-			.mockImplementationOnce(throwError)
+		jest.spyOn(checkUserByEmailRepositorySpy, 'check').mockImplementationOnce(throwError)
 		const params = mockParams()
 		const promise = sut.add(params)
 		await expect(promise).rejects.toThrow()

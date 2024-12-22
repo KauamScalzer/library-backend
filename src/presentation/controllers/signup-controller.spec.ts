@@ -1,8 +1,4 @@
-import {
-	EmailInUseError,
-	InvalidParamError,
-	MissingParamError
-} from '../errors'
+import { EmailInUseError, InvalidParamError, MissingParamError } from '../errors'
 import { badRequest, forbidden, ok, serverError } from '../helpers'
 import { SignupController } from './signup-controller'
 import type { IEmailValidator } from '../protocols'
@@ -48,11 +44,7 @@ const makeSut = (): SutTypes => {
 	const authenticateSpy = new AuthenticateSpy()
 	const emailValidatorSpy = new EmailValidatorSpy()
 	const addUserSpy = new AddUserSpy()
-	const sut = new SignupController(
-		emailValidatorSpy,
-		addUserSpy,
-		authenticateSpy
-	)
+	const sut = new SignupController(emailValidatorSpy, addUserSpy, authenticateSpy)
 	return {
 		sut,
 		emailValidatorSpy,
