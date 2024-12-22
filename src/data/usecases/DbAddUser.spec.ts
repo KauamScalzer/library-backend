@@ -114,4 +114,11 @@ describe('DbAddUser Usecase', () => {
 		const promise = sut.add(params)
 		await expect(promise).rejects.toThrow()
 	})
+
+	test('Should return false on success', async () => {
+		const { sut } = makeSut()
+		const params = mockParams()
+		const result = await sut.add(params)
+		expect(result).toBeFalsy()
+	})
 })
