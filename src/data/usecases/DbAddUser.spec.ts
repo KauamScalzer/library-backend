@@ -77,4 +77,12 @@ describe('DbAddUser Usecase', () => {
 		await sut.add(params)
 		expect(encrypterSpy.value).toEqual(params.password)
 	})
+
+	test('Should throw if Encrypter throws', async () => {
+		const { sut, encrypterSpy } = makeSut()
+		jest.spyOn(encrypterSpy, 'encrypt').mockImplementationOnce(throwError)
+		const params = mockParams()
+		const promise = sut.add(params)
+		await expect(promise).rejects.toThrow()
+	})
 })
